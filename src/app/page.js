@@ -82,23 +82,23 @@ export default function Home() {
   };
 
   return <div>
-    <h1>THIS IS A SALARY SIMULATOR</h1>
+    <h1 className={classes.h1}>THIS IS A SALARY SIMULATOR</h1>
 
-    <table className={classes.table}>
+    <table className={`${classes["styled-table"]} ${classes["margin-table"]}`}>
       <thead className={classes.thead}>
         <tr>
           <th></th>
           <th>Salary Base</th>
           <th>Food</th>
           <th>Number of days to apply food subsidy</th>
-          <th>Others</th>
-          <th>Total Before Discounts</th>
+          {/* <th>Others</th> */}
+          {/* <th>Total Before Discounts</th> */}
           <th>IRS</th>
           <th>IRS Amount</th>
           <th>SS Amount(11%)</th>
           <th>Total After Discounts</th>
           <th>Help Costs</th>
-          <th>Fuel Plafond</th>
+          {/* <th>Fuel Plafond</th> */}
           <th>Total</th>
         </tr>
       </thead>
@@ -116,17 +116,17 @@ export default function Home() {
           <th>
             <input className={classes.input} onChange={nDaysActualFoodSubsidyChangeHandler} type="number" value={nDaysActualFood} />
           </th>
-          <th className={classes.currency}></th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
+          {/* <th className={classes.currency}></th> */}
           <th className={classes.percent}>{Number((actualIrsDiscount / actualSalary) * 100).toFixed(2)}</th>
           <th className={classes.currency}> {Number(actualIrsDiscount).toFixed(2)}</th>
           <th className={classes.currency}>{Number(actualSSDiscount).toFixed(2)}</th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
           {/* <th className={classes.currency}>{Number(actualHPCosts).toFixed(2)}</th> */}
           <th>
             <input className={classes.input} onChange={actualHPCostsChangeHandler} type="number" value={actualHPCosts} step="50" />
           </th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
           <th className={classes.currency}>{Number(actualLiquidWithoutFood + actualHPCosts + (actualFoodSubsidy * nDaysActualFood)).toFixed(2)}</th>
         </tr>
         <tr>
@@ -142,17 +142,17 @@ export default function Home() {
           <th>
             <input className={classes.input} onChange={nDaysDesiredFoodSubsidyChangeHandler} type="number" value={nDaysDesiredFood} />
           </th>
-          <th className={classes.currency}></th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
+          {/* <th className={classes.currency}></th> */}
           <th className={classes.percent}> {Number((desiredIrsDiscount / desiredSalary) * 100).toFixed(2)}</th>
           <th className={classes.currency}>{Number(desiredIrsDiscount).toFixed(2)}</th>
           <th className={classes.currency}>{Number(desiredSSDiscount).toFixed(2)}</th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
           {/* <th className={classes.currency}>{Number(desiredHPCosts).toFixed(2)}</th> */}
           <th>
             <input className={classes.input} onChange={desiredHPCostsChangeHandler} type="number" value={desiredHPCosts} step="50" />
           </th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
           <th className={classes.currency}>{Number(desiredLiquidWithoutFood + desiredHPCosts + (desiredFoodSubsidy * nDaysDesiredFood)).toFixed(2)}</th>
         </tr>
       </tbody>
@@ -162,21 +162,21 @@ export default function Home() {
           <th className={classes.currency}>{Number(desiredSalary - actualSalary).toFixed(2)}</th>
           <th className={classes.currency}>{Number((desiredFoodSubsidy * nDaysDesiredFood) - (actualFoodSubsidy * nDaysActualFood)).toFixed(2)}</th>
           <th> {Number(nDaysDesiredFood - nDaysActualFood).toFixed(2)}</th>
-          <th className={classes.currency}></th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
+          {/* <th className={classes.currency}></th> */}
           <th ></th>
           <th className={classes.currency}>{Number(desiredIrsDiscount - actualIrsDiscount).toFixed(2)}</th>
           <th className={classes.currency}>{Number(desiredSSDiscount - actualSSDiscount).toFixed(2)}</th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
           <th className={classes.currency}>{Number(desiredHPCosts - actualHPCosts).toFixed(2)}</th>
-          <th className={classes.currency}></th>
+          {/* <th className={classes.currency}></th> */}
           <th className={classes.currency}>{Number((desiredLiquidWithoutFood - actualLiquidWithoutFood) + (desiredHPCosts - actualHPCosts) + (desiredFoodSubsidy * nDaysDesiredFood) - (actualFoodSubsidy * nDaysActualFood)).toFixed(2)}</th>
         </tr>
       </tfoot>
     </table>
 
-    <h2>IRS TABLE</h2>
-    <table className={classes.table}>
+    <h2 className={classes.h1}>IRS TABLE FOR NO MARRIED AND NO DEPENDENTS</h2>
+    <table className={` ${classes["styled-table"]} ${classes["center-table"]}`}>
       <thead>
         <tr className={classes.tr}>
           <th className={classes.th}>Salary</th>
