@@ -84,7 +84,7 @@ export default function Home() {
   return <div>
     <h1 className={classes.h1}>THIS IS A SALARY SIMULATOR</h1>
 
-    <table className={`${classes["styled-table"]} ${classes["margin-table"]}`}>
+    <table className={`${classes["styled-table"]} ${classes["center-table"]}`}>
       <thead className={classes.thead}>
         <tr>
           <th></th>
