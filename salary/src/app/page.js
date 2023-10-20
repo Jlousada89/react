@@ -96,7 +96,7 @@ export default function Home() {
           <th>IRS</th>
           <th>IRS Amount</th>
           <th>SS Amount(11%)</th>
-          <th>Total After Discounts</th>
+          {/* <th>Total After Discounts</th> */}
           <th>Help Costs</th>
           {/* <th>Fuel Plafond</th> */}
           <th>Total</th>
