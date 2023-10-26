@@ -88,8 +88,10 @@ export default function Home() {
       <thead className={classes.thead}>
         <tr>
           <th></th>
-          <th>Salary Base</th>
-          <th>Food</th>
+          <th>Base Value</th>
+          <th>Annual Gross Value (12Months)</th>
+          <th>Annual Gross Value (14Months)</th>
+          <th>Food Subsidy</th>
           <th>Number of days to apply food subsidy</th>
           {/* <th>Others</th> */}
           {/* <th>Total Before Discounts</th> */}
@@ -108,6 +110,12 @@ export default function Home() {
           {/* <th className={classes.currency}>{Number(actualSalary).toFixed(2)}</th> */}
           <th>
             <input className={classes.input} onChange={actualSalaryChangeHandler} type="number" value={actualSalary} step="50" />
+          </th>
+          <th>
+            <input className={classes.input} onChange={actualSalaryChangeHandler} type="number" value={actualSalary*12} step="50" />
+          </th>
+           <th>
+            <input className={classes.input} onChange={actualSalaryChangeHandler} type="number" value={actualSalary*14} step="50" />
           </th>
           {/* <th className={classes.currency}>{Number(actualFoodSubsidy * nDaysActualFood).toFixed(2)}</th> */}
           <th>
@@ -134,6 +142,12 @@ export default function Home() {
           {/* <th className={classes.currency}>{Number(desiredSalary).toFixed(2)}</th> */}
           <th>
             <input className={classes.input} onChange={desiredSalaryChangeHandler} type="number" value={desiredSalary} step="50" />
+          </th>
+           <th>
+            <input className={classes.input} onChange={desiredSalaryChangeHandler} type="number" value={desiredSalary*12} step="50" />
+          </th> 
+          <th>
+            <input className={classes.input} onChange={desiredSalaryChangeHandler} type="number" value={desiredSalary*14} step="50" />
           </th>
           {/* <th className={classes.currency}>{Number(desiredFoodSubsidy * nDaysDesiredFood).toFixed(2)}</th> */}
           <th>
