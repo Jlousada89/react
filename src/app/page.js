@@ -1,218 +1,118 @@
 "use client";
-import { VALID_LOADERS } from 'next/dist/shared/lib/image-config';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import classes from "./page.module.css";
+import {
+  TextField,
+  Table,
+  TableHead,
+  TableBody,
+  TableFooter,
+  Tab,
+} from "@mui/material";
 
-export const itv = [
-  { key: 1, salary: 762.0, tax: 0.0, rescueValue: 0.0 },
-  { key: 2, salary: 886.57, tax: 14.5, rescueValue: 14.15 },
-  { key: 3, salary: 932.14, tax: 21.0, rescueValue: 21.0 },
-  { key: 4, salary: 999.14, tax: 21.0, rescueValue: 114.14 },
-  { key: 5, salary: 1106.93, tax: 26.50, rescueValue: 169.09 },
-  { key: 6, salary: 1600.36, tax: 28.50, rescueValue: 191.23 },
-  { key: 7, salary: 1961.36, tax: 35.0, rescueValue: 295.26 },
-  { key: 8, salary: 2529.05, tax: 37.0, rescueValue: 334.48 },
-  { key: 9, salary: 3691.46, tax: 38.72, rescueValue: 377.86 },
-  { key: 10, salary: 5469.90, tax: 40.05, rescueValue: 427.18 },
-  { key: 11, salary: 6420.55, tax: 42.72, rescueValue: 573.22 },
-  { key: 12, salary: 20064.21, tax: 44.95, rescueValue: 716.08 },
-  { key: 13, salary: 20064.21, tax: 47.17, rescueValue: 1162.51 },
-];
+import styled from "@emotion/react";
+import Header from "./components/Header";
+import _ from "./resources/DefaultSalary";
+import ItvTable from "./components/ItvTable";
+import Row from "./components/Row";
 
 export default function Home() {
+  const [actual, setActual] = useState(_);
+  const [desired, setDesired] = useState(_);
+  const [total, setTotal] = useState(_);
 
-  const [actualSalary, setActualSalary] = useState(1500);
-  const [desiredSalary, setDesiredSalary] = useState(1800);
-  const [actualLiquidWithoutFood, setActualLiquidWithoutFood] = useState(0);
-  const [desiredLiquidWithoutFood, setDesiredLiquidWithoutFood] = useState(0);
-  const [actualFoodSubsidy, setActualFoodSubsidy] = useState(8.32);
-  const [desiredFoodSubsidy, setDesiredFoodSubsidy] = useState(9.60);
-  const [nDaysActualFood, setNDaysActualFood] = useState(22);
-  const [nDaysDesiredFood, setNDaysDesiredFood] = useState(22);
-  const [actualIrsDiscount, setActualIrsDiscount] = useState(0);
-  const [desiredIrsDiscount, setDesiredIrsDiscount] = useState(0);
-  const [actualSSDiscount, setActualSSDiscount] = useState(0);
-  const [desiredSSDiscount, setDesiredSSDiscount] = useState(0);
-  const [actualHPCosts, setActualHPCosts] = useState(0);
-  const [desiredHPCosts, setDesiredHPCosts] = useState(0);
-
-  const desiredSalaryChangeHandler = (event) => {
-    setDesiredSalary(event.currentTarget.value);
-
-    const res = itv.find((value) => (event.currentTarget.value <= value.salary));
-    const ssDiscount = (event.currentTarget.value * 0.11).toFixed(2);
-    const irsDiscount = Math.floor((event.currentTarget.value * (res.tax / 100)) - res.rescueValue);
-    setDesiredLiquidWithoutFood(Math.round(event.currentTarget.value - ssDiscount - irsDiscount));
-    setDesiredIrsDiscount(irsDiscount);
-    setDesiredSSDiscount(ssDiscount);
-
+  const changeActualRowHandler = (obj) => {
+    setActual(obj);
   };
 
-  const actualSalaryChangeHandler = (event) => {
-    setActualSalary(event.currentTarget.value);
-
-    const res = itv.find((value) => (event.currentTarget.value <= value.salary));
-    const ssDiscount = (event.currentTarget.value * 0.11).toFixed(2);
-    const irsDiscount = Math.floor((event.currentTarget.value * (res.tax / 100)) - res.rescueValue);
-    setActualLiquidWithoutFood(Math.round(event.currentTarget.value - ssDiscount - irsDiscount));
-    setActualIrsDiscount(irsDiscount);
-    setActualSSDiscount(ssDiscount);
-
+  const changeDesiredRowHandler = (obj) => {
+    setDesired(obj);
   };
 
-  const actualFoodSubsidyChangeHandler = (event) => {
-    setActualFoodSubsidy(Number(event.currentTarget.value));
-  };
-  const desiredFoodSubsidyChangeHandler = (event) => {
-    setDesiredFoodSubsidy(Number(event.currentTarget.value));
-  };
+  return (
+    <div>
+      <h1 className={classes.h1}>THIS IS A SALARY SIMULATOR</h1>
 
-  const nDaysActualFoodSubsidyChangeHandler = (event) => {
-    setNDaysActualFood(Number(event.currentTarget.value));
-  };
-  const nDaysDesiredFoodSubsidyChangeHandler = (event) => {
-    setNDaysDesiredFood(Number(event.currentTarget.value));
-  };
-
-  const actualHPCostsChangeHandler = (event) => {
-    setActualHPCosts(Number(event.currentTarget.value));
-  };
-  const desiredHPCostsChangeHandler = (event) => {
-    setDesiredHPCosts(Number(event.currentTarget.value));
-  };
-
-  return <div>
-    <h1 className={classes.h1}>THIS IS A SALARY SIMULATOR</h1>
-
-    <table className={`${classes["styled-table"]} ${classes["center-table"]}`}>
-      <thead className={classes.thead}>
-        <tr>
-          <th></th>
-          <th>Base Value</th>
-          <th>Annual Gross Value (12Months)</th>
-          <th>Annual Gross Value (14Months)</th>
-          <th>Food Subsidy</th>
-          <th>Number of days to apply food subsidy</th>
-          {/* <th>Others</th> */}
-          {/* <th>Total Before Discounts</th> */}
-          <th>IRS</th>
-          <th>IRS Amount</th>
-          <th>SS Amount(11%)</th>
-          {/* <th>Total After Discounts</th> */}
-          <th>Help Costs</th>
-          {/* <th>Fuel Plafond</th> */}
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Actual</th>
-          {/* <th className={classes.currency}>{Number(actualSalary).toFixed(2)}</th> */}
-          <th>
-            <input className={classes.input} onChange={actualSalaryChangeHandler} type="number" value={actualSalary} step="50" />
-          </th>
-          <th>
-            <input className={classes.input} onChange={actualSalaryChangeHandler} type="number" value={actualSalary*12} step="50" />
-          </th>
-           <th>
-            <input className={classes.input} onChange={actualSalaryChangeHandler} type="number" value={actualSalary*14} step="50" />
-          </th>
-          {/* <th className={classes.currency}>{Number(actualFoodSubsidy * nDaysActualFood).toFixed(2)}</th> */}
-          <th>
-            <input className={classes.input} onChange={actualFoodSubsidyChangeHandler} type="number" value={actualFoodSubsidy} step="0.01" />
-          </th>
-          <th>
-            <input className={classes.input} onChange={nDaysActualFoodSubsidyChangeHandler} type="number" value={nDaysActualFood} />
-          </th>
-          {/* <th className={classes.currency}></th> */}
-          {/* <th className={classes.currency}></th> */}
-          <th className={classes.percent}>{Number((actualIrsDiscount / actualSalary) * 100).toFixed(2)}</th>
-          <th className={classes.currency}> {Number(actualIrsDiscount).toFixed(2)}</th>
-          <th className={classes.currency}>{Number(actualSSDiscount).toFixed(2)}</th>
-          {/* <th className={classes.currency}></th> */}
-          {/* <th className={classes.currency}>{Number(actualHPCosts).toFixed(2)}</th> */}
-          <th>
-            <input className={classes.input} onChange={actualHPCostsChangeHandler} type="number" value={actualHPCosts} step="50" />
-          </th>
-          {/* <th className={classes.currency}></th> */}
-          <th className={classes.currency}>{Number(actualLiquidWithoutFood + actualHPCosts + (actualFoodSubsidy * nDaysActualFood)).toFixed(2)}</th>
-        </tr>
-        <tr>
-          <th>Desired</th>
-          {/* <th className={classes.currency}>{Number(desiredSalary).toFixed(2)}</th> */}
-          <th>
-            <input className={classes.input} onChange={desiredSalaryChangeHandler} type="number" value={desiredSalary} step="50" />
-          </th>
-           <th>
-            <input className={classes.input} onChange={desiredSalaryChangeHandler} type="number" value={desiredSalary*12} step="50" />
-          </th> 
-          <th>
-            <input className={classes.input} onChange={desiredSalaryChangeHandler} type="number" value={desiredSalary*14} step="50" />
-          </th>
-          {/* <th className={classes.currency}>{Number(desiredFoodSubsidy * nDaysDesiredFood).toFixed(2)}</th> */}
-          <th>
-            <input className={classes.input} onChange={desiredFoodSubsidyChangeHandler} type="number" value={desiredFoodSubsidy} step="0.01" />
-          </th>
-          <th>
-            <input className={classes.input} onChange={nDaysDesiredFoodSubsidyChangeHandler} type="number" value={nDaysDesiredFood} />
-          </th>
-          {/* <th className={classes.currency}></th> */}
-          {/* <th className={classes.currency}></th> */}
-          <th className={classes.percent}> {Number((desiredIrsDiscount / desiredSalary) * 100).toFixed(2)}</th>
-          <th className={classes.currency}>{Number(desiredIrsDiscount).toFixed(2)}</th>
-          <th className={classes.currency}>{Number(desiredSSDiscount).toFixed(2)}</th>
-          {/* <th className={classes.currency}></th> */}
-          {/* <th className={classes.currency}>{Number(desiredHPCosts).toFixed(2)}</th> */}
-          <th>
-            <input className={classes.input} onChange={desiredHPCostsChangeHandler} type="number" value={desiredHPCosts} step="50" />
-          </th>
-          {/* <th className={classes.currency}></th> */}
-          <th className={classes.currency}>{Number(desiredLiquidWithoutFood + desiredHPCosts + (desiredFoodSubsidy * nDaysDesiredFood)).toFixed(2)}</th>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>Difference</th>
-          <th className={classes.currency}>{Number(desiredSalary - actualSalary).toFixed(2)}</th>
-          <th className={classes.currency}>{Number((desiredFoodSubsidy * nDaysDesiredFood) - (actualFoodSubsidy * nDaysActualFood)).toFixed(2)}</th>
-          <th> {Number(nDaysDesiredFood - nDaysActualFood).toFixed(2)}</th>
-          {/* <th className={classes.currency}></th> */}
-          {/* <th className={classes.currency}></th> */}
-          <th ></th>
-          <th className={classes.currency}>{Number(desiredIrsDiscount - actualIrsDiscount).toFixed(2)}</th>
-          <th className={classes.currency}>{Number(desiredSSDiscount - actualSSDiscount).toFixed(2)}</th>
-          {/* <th className={classes.currency}></th> */}
-          <th className={classes.currency}>{Number(desiredHPCosts - actualHPCosts).toFixed(2)}</th>
-          {/* <th className={classes.currency}></th> */}
-          <th className={classes.currency}>{Number((desiredLiquidWithoutFood - actualLiquidWithoutFood) + (desiredHPCosts - actualHPCosts) + (desiredFoodSubsidy * nDaysDesiredFood) - (actualFoodSubsidy * nDaysActualFood)).toFixed(2)}</th>
-        </tr>
-      </tfoot>
-    </table>
-
-    <h2 className={classes.h1}>IRS TABLE FOR NO MARRIED AND NO DEPENDENTS</h2>
-    <table className={` ${classes["styled-table"]} ${classes["center-table"]}`}>
-      <thead>
-        <tr className={classes.tr}>
-          <th className={classes.th}>Salary</th>
-          <th className={classes.th}>Tax</th>
-          <th className={classes.th}>Value to rescue</th>
-        </tr>
-      </thead>
-      <tbody>
-        {itv.map((val) => (
-          <tr key={val.key} className={classes.tr}>
+      <Table
+        style={{ border: "5px solid darkblue" }}
+        // className={`${classes["styled-Table"]} ${classes["center-Table"]}`}
+      >
+        <TableHead
+          style={{ border: "5px solid darkblue" }}
+          // className={classes.TableHead}
+        >
+          <Header />
+        </TableHead>
+        <TableBody>
+          <Row obj={actual} onChange={changeActualRowHandler} title="Actual" />
+          <Row
+            obj={desired}
+            onChange={changeDesiredRowHandler}
+            title="Desired"
+          />
+        </TableBody>
+        <TableFooter style={{ border: "5px solid darkblue" }}>
+          <tr>
+            <th>Difference</th>
             <th className={classes.currency}>
-              {val.salary.toFixed(2)}
-            </th>
-            <th className={classes.percent}>
-              {val.tax.toFixed(2)}
+              {Number(desired.monthlyIncome - actual.monthlyIncome).toFixed(2)}
             </th>
             <th className={classes.currency}>
-              {val.rescueValue.toFixed(2)}
+              {Number(desired.annualIncome - actual.annualIncome).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(
+                desired.foodIncome * desired.nDaysFood -
+                  actual.foodIncome * actual.nDaysFood
+              ).toFixed(2)}
+            </th>
+            <th> {Number(desired.nDaysFood - actual.nDaysFood).toFixed(2)}</th>
+            {/* <th className={classes.currency}></th> */}
+            {/* <th className={classes.currency}></th> */}
+            <th className={classes.input}></th>
+            <th className={classes.currency}>
+              {Number(desired.irsFee - actual.irsFee).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(desired.ssFee - actual.ssFee).toFixed(2)}
+            </th>
+            {/* <th className={classes.currency}></th> */}
+            <th className={classes.currency}>
+              {Number(desired.acIncome - actual.acIncome).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(
+                desired.coverflexAnnualIncome - actual.coverflexAnnualIncome
+              ).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(
+                desired.coverflexMonthlyIncome - actual.coverflexMonthlyIncome
+              ).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(
+                desired.coverflexInsureLoss - actual.coverflexInsureLoss
+              ).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(desired.coverflexPPRLoss - actual.coverflexPPRLoss).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(desired.carIncome - actual.carIncome).toFixed(2)}
+            </th>
+            <th className={classes.currency}>
+              {Number(desired.carFuelIncome - actual.carFuelIncome).toFixed(2)}
+            </th>
+            {/* <th className={classes.currency}></th> */}
+            <th className={classes.currency}>
+              {Number(desired.total - actual.total).toFixed(2)}
             </th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+        </TableFooter>
+      </Table>
+      <h2 className={classes.h1}>IRS TABLE FOR NO MARRIED AND NO DEPENDENTS</h2>
+      <ItvTable />
+    </div>
+  );
 }
